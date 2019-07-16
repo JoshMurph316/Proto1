@@ -5,7 +5,9 @@ public class Sensor : MonoBehaviour
     public Transform target;
     public float maxAngle;
     public float maxRadius;
+    public string targetTag = "Target";
 
+    private GameObject[] target_list;
     private bool targetAquired;
 
     private void OnDrawGizmos()
@@ -32,13 +34,30 @@ public class Sensor : MonoBehaviour
         Gizmos.DrawRay(transform.position, transform.forward * maxRadius);
     }
 
-//    public static bool targetInFieldOfView()
-//    {
-//        return false;
-//    }
-//
-//    private void Update()
-//    {
-//        targetAquired = targetInFieldOfView();
-//    }
+    public static bool targetInFieldOfView()
+    {
+        return false;
+    }
+
+    private void Update()
+    {
+        targetAquired = targetInFieldOfView();
+        updateTargetList();
+    }
+
+    private void updateTargetList()
+    {
+        // Find all enemies via tag and store in arr
+        GameObject[] targets = GameObject.FindGameObjectsWithTag(targetTag);
+
+        foreach (GameObject target in targets)
+        {
+            float distanceToTarget = (transform.position - target.transform.position).sqrMagnitude;
+
+            if (distanceToTarget < maxRadius)
+            {
+                Debug.Log("Bingo");
+            }
+        }
+    }
 }
